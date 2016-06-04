@@ -9,6 +9,13 @@ cd refseq_dl
 ```
 
 ## usage
+This can be used with any group listed under the genomes/refseq directory, but recommended groups would be:
+
+- fungi
+- archaea
+- protozoa
+
+### example
 To download all the fungal refseq genomes:
 ```sh
 # First, downloads the list of all the genomes
@@ -16,3 +23,6 @@ snakemake --config group=fungi
 # Next, actually download the genomes (named by their taxid)
 snakemake --config group=fungi download_group
 ```
+
+## output
+The genomes are listed under `{group}/{taxid}/{taxid}.fna.gz`.
