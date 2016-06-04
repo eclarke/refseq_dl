@@ -3,7 +3,7 @@ Download refseq genomes for a group using Snakemake
 
 ## install
 ```sh
-conda install -c bioconda biopython snakemake
+conda install -c bioconda snakemake
 git clone https://github.com/eclarke/refseq_dl
 cd refseq_dl
 ```
