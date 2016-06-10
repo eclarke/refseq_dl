@@ -6,7 +6,9 @@ from snakemake.utils import update_config
 from functions import *
 
 default_config = {
-    'group': 'fungi'
+    'group': 'fungi',
+    'kraken_db': '/home/common/kraken/standard',
+    'clark_db': '/home/common/clark'
 }
 
 update_config(default_config, config)
@@ -64,7 +66,49 @@ rule download_group:
             "{group}/{taxid}/{taxid}.fna.gz",
             group=config['group'],
             taxid=generate_list(config['group']+'/genome_urls.txt'))
-                    
-                        
-                    
+
+rule gunzip:
+    input:
+        "{fname}.gz"
+    output:
+        "{fname}"
+    shell:
+        "gunzip {input}"
+
+rule insert_kraken_taxid:
+    input:
+        "{group}/{taxid}/{taxid}.fna"
+    output:
+        temp("{group}/{taxid}/{taxid}.kraken.fna")
+    shell:
+        "sed -r 's/(>[^ ]*)/\\1|kraken:taxid|{wildcards.taxid} /' {input} > {output}"
+
+rule mask_lowercase:
+    input:
+        "{filename}.fna"
+    output:
+        "{filename}.masked.fna"
+    shell:
+        "sed -e '/>/!s/a\\|c\\|g\\|t/N/g' {input} > {output}"
+
+rule add_group_to_kraken_db:
+    input:
+        expand(
+            "{group}/{taxid}/{taxid}.kraken.masked.fna",
+            group=config['group'],
+            taxid=generate_list(config['group']+'/genome_urls.txt'))
+    run:
+        for infile in input:
+            print(infile)
+            shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
+    
+rule add_group_to_clark_db:
+    input:
+        expand(
+            "{group}/{taxid}/{taxid}.masked.fna",
+            group=config['group'],
+            taxid=generate_list(config['group']+'/genome_urls.txt'))
+    shell:
+        """cp {input} {config[clark_db]}/Custom"""
+    
             
