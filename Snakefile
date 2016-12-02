@@ -7,7 +7,7 @@ from functions import *
 
 default_config = {
     'group': 'fungi',
-    'kraken_db': '/home/chunyu/kraken/standard',
+    'kraken_db': '/home/common/kraken/standard',
     'clark_db': '/home/common/clark'
 }
 
@@ -114,3 +114,4 @@ rule add_group_to_clark_db:
             taxid=generate_list(config['group']+'/genome_urls.txt'))
     shell:
         """cp {input} {config[clark_db]}/Custom"""
+
