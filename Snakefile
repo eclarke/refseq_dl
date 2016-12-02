@@ -16,7 +16,11 @@ config = default_config
 
 rule all:
     input:
-        config['group']+"/genome_urls.txt"
+        config['group']+"/genome_urls.txt",
+        expand(
+            "{group}/{taxid}/{taxid}.kraken.masked.fna",
+            group=config['group'],
+            taxid=generate_list(config['group']+'/genome_urls.txt'))
 
 rule assembly_summary:
     output:
@@ -89,7 +93,7 @@ rule mask_lowercase:
     output:
         "{filename}.masked.fna"
     shell:
-        "sed -e '/>/!s/a\\|c\\|g\\|t/N/g' {input} > {output}"
+        "dustmasker -in {input} -infmt fasta -outfmt fasta | sed -e '/>/!s/a\\|c\\|g\\|t/N/g' > {output}"
 
 rule add_group_to_kraken_db:
     input:
@@ -100,8 +104,8 @@ rule add_group_to_kraken_db:
     run:
         for infile in input:
             print(infile)
-            shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
-    
+            #shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
+            
 rule add_group_to_clark_db:
     input:
         expand(
@@ -110,5 +114,4 @@ rule add_group_to_clark_db:
             taxid=generate_list(config['group']+'/genome_urls.txt'))
     shell:
         """cp {input} {config[clark_db]}/Custom"""
-    
-            
+

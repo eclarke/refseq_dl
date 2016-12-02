@@ -22,6 +22,8 @@ To download all the fungal refseq genomes:
 snakemake --config group=fungi
 # Next, actually download the genomes (named by their taxid)
 snakemake --config group=fungi download_group
+# Thrid, add seqeucnes to existing kraken db
+snakemake --config group=fungi add_group_to_kraken_db
 ```
 
 ## output
