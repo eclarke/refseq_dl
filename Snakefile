@@ -7,7 +7,7 @@ from functions import *
 
 default_config = {
     'group': 'fungi',
-    'kraken_db': '/home/chunyu/krakendb/testfungi'
+    'kraken_db': '/home/chunyu/krakendb/standard'
 }
 
 update_config(default_config, config)
@@ -105,3 +105,11 @@ rule add_group_to_kraken_db:
             print(infile)
             shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
             
+rule add_group_to_clark_db:
+    input:
+        expand(
+            "{group}/{taxid}/{taxid}.masked.fna",
+            group=config['group'],
+            taxid=generate_list(config['group']+'/genome_urls.txt'))
+    shell:
+        """cp {input} {config[clark_db]}/Custom"""
