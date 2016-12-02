@@ -104,7 +104,7 @@ rule add_group_to_kraken_db:
     run:
         for infile in input:
             print(infile)
-            shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
+            #shell("kraken-build --add-to-library {infile} --db {config[kraken_db]}")
             
 rule add_group_to_clark_db:
     input:
