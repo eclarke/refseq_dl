@@ -7,7 +7,7 @@ from functions import *
 
 default_config = {
     'group': 'fungi',
-    'kraken_db': '/home/chunyu/krakendb/standard',
+    'kraken_db': '/home/chunyu/kraken/standard',
     'clark_db': '/home/common/clark'
 }
 
